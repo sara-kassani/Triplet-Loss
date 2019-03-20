@@ -5,7 +5,6 @@ import inspect
 from tqdm import tqdm
 import pandas as pd
 import matplotlib.pyplot as plt
-%matplotlib inline
 from sklearn.model_selection import train_test_split
 from keras.callbacks import ModelCheckpoint
 import tensorflow as tf
