@@ -7,6 +7,8 @@ import h5py
 import tensorflow as tf
 from keras.applications.imagenet_utils import preprocess_input
 from model import ResNet152
+from keras import optimizers 
+from keras import backend as K
 
 def sensitivity(y_true,y_pred):
     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))

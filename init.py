@@ -15,16 +15,16 @@ if __name__ == '__main__':
     channels = 3
     num_classes = 7 
     batch_size = 32 
-    epochs = 150
+    epochs = 300
 
     #Replace with your own dataset.
-    (x_train, y_train), (x_test, y_test) = load_training_data(task_idx=3,
+    (x_train, y_train), (x_valid, y_valid), _ = load_training_data(task_idx=3,
                                                                    output_size=224,
                                                                    num_partitions=1,
                                                                     test_split = 0.8)
 
     class_wt_type = 'ones'
-    run_name = 'ResNet152'
+    run_name = 'OriginalResNet152'
 
     num_classes = y_train.shape[1]
 
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     class_weights = compute_class_weights(y_train, wt_type=class_wt_type)
 
     sys.stdout.flush()
-    """s#Size of training batch
+    """#Size of training batch
     batch_train = x_train.shape[0]
     #Size of testing batch
     batch_test = x_test.shape[0]
