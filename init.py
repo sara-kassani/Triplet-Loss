@@ -23,7 +23,7 @@ if __name__ == '__main__':
                                                                    num_partitions=1,
                                                                     test_split = 0.8)
 
-    class_wt_type = 'ones'
+    class_wt_type = 'balanced'
     run_name = 'OriginalResNet152'
 
     num_classes = y_train.shape[1]
