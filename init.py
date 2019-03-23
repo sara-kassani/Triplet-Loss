@@ -90,4 +90,4 @@ if __name__ == '__main__':
               )
 
     # Make predictions
-    predictions_valid = model.predict(x_test, batch_size=batch_size, verbose=1)
+    #predictions_valid = model.predict(x_test, batch_size=batch_size, verbose=1)
