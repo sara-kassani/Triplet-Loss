@@ -28,10 +28,6 @@ def original_resnet152(num_classes, shape=(224,224,3)):
     x = Dense(num_classes, activation='softmax')(x)
     model = Model(initial_model.input, x)
 
-    #Train only higher layers to avoid overfitting
-    for layer in model.layers[:15]:
-        layer.trainable = False
-
     #Learning rate is changed to 0.001
     adam = optimizers.adam(lr = 0.00146)
     model.compile(optimizer=adam, loss="categorical_crossentropy", metrics=[sensitivity, specificity])
