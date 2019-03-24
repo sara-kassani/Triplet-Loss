@@ -1,6 +1,6 @@
 from fine_tune_model import original_resnet152, original_resnet50
-from keras.datasets import cifar10
-from load_data import load_training_data
+from keras.preprocessing.image import ImageDataGenerator
+from load_data import load_training_data, load_task3_training_labels
 import numpy as np
 import tensorflow as tf
 from keras import backend as K
@@ -14,9 +14,10 @@ if __name__ == '__main__':
     img_rows, img_cols = 224, 224
     channels = 3
     num_classes = 7 
-    batch_size = 32 
+    batch_size = 16
     epochs = 300
-
+    
+    y = load_task3_traininglabels()
     #Replace with your own dataset.
     (x_train, y_train), (x_valid, y_valid), _ = load_training_data(task_idx=3,
                                                                    output_size=224,
@@ -27,13 +28,13 @@ if __name__ == '__main__':
     run_name = 'OriginalResNet152'
 
     num_classes = y_train.shape[1]
-
+    
+    class_weights = compute_class_weights(y, wt_type=class_wt_type)
+    
     callbacks = config_cls_callbacks(run_name)
 
     n_samples_train = x_train.shape[0]
     n_samples_valid = x_valid.shape[0]
-
-    class_weights = compute_class_weights(y_train, wt_type=class_wt_type)
 
     sys.stdout.flush()
     """#Size of training batch
@@ -76,9 +77,27 @@ if __name__ == '__main__':
     model.fit_generator(data_train_gen(), epochs=batch_train/batch_size, verbose=1)
     '''
     #-------------------------------------------------------------------------------
+    horizontal_flip = True
+    vertical_flip = True
+    rotation_angle = 180
+    width_shift_range = 0.1
+    height_shift_range = 0.1
 
+    datagen = ImageDataGenerator(rotation_range=rotation_angle,
+                                     horizontal_flip=horizontal_flip,
+                                     vertical_flip=vertical_flip,
+                                     width_shift_range=width_shift_range,
+                                     height_shift_range=height_shift_range)
+    
+    model.fit_generator(generator=datagen.flow(x_train, y_train, batch_size=batch_size),
+                            steps_per_epoch=x_train.shape[0] // 16 * 2,
+                            epochs=epochs,
+                            initial_epoch=0,
+                            verbose=1,
+                            validation_data=(x_valid, y_valid),
+                            callbacks=callbacks)
     #Fit model on the training and testing datasets
-    model.fit(x=x_train,
+    '''model.fit(x=x_train,
               y=y_train,
               batch_size=batch_size,
               epochs=epochs,
@@ -87,7 +106,7 @@ if __name__ == '__main__':
               class_weight=class_weights,
               shuffle=True,
               callbacks=callbacks
-              )
+              )'''
 
     # Make predictions
     #predictions_valid = model.predict(x_test, batch_size=batch_size, verbose=1)
