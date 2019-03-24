@@ -13,7 +13,7 @@ from skimage import transform
 
 curr_filename = inspect.getfile(inspect.currentframe())
 root_dir = os.path.dirname(os.path.abspath(curr_filename))
-task3_img = 'ISIC2018_Task3_Training_Input_Original'
+task3_img = 'ISIC2018_Task3_Training_Input'
 task3_gt = 'ISIC2018_Task3_Training_GroundTruth'
 task3_gt_fname = 'ISIC2018_Task3_Training_GroundTruth.csv'
 task3_sup_fname = 'ISIC2018_Task3_Training_LesionGroupings.csv'
