@@ -17,7 +17,7 @@ if __name__ == '__main__':
     batch_size = 16
     epochs = 300
     
-    y = load_task3_traininglabels()
+    y = load_task3_training_labels()
     #Replace with your own dataset.
     (x_train, y_train), (x_valid, y_valid), _ = load_training_data(task_idx=3,
                                                                    output_size=224,
