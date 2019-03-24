@@ -1,3 +1,8 @@
+import os
+os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID";
+ 
+# The GPU id to use, usually either "0" or "1";
+os.environ["CUDA_VISIBLE_DEVICES"]="0";  
 from fine_tune_model import original_resnet152, original_resnet50
 from keras.preprocessing.image import ImageDataGenerator
 from load_data import load_training_data, load_task3_training_labels
