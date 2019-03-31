@@ -10,12 +10,13 @@ from keras.callbacks import ModelCheckpoint
 import tensorflow as tf
 from skimage import io
 from skimage import transform
+from PIL import Image
 
 curr_filename = inspect.getfile(inspect.currentframe())
 root_dir = os.path.dirname(os.path.abspath(curr_filename))
 task3_img = 'ISIC2018_Task3_Training_Input'
 task3_gt = 'ISIC2018_Task3_Training_GroundTruth'
-task3_gt_fname = 'ISIC2018_Task3_Training_GroundTruth.csv'
+task3_gt_fname = 'full_data.csv'
 task3_sup_fname = 'ISIC2018_Task3_Training_LesionGroupings.csv'
 data_dir = os.path.join(root_dir, 'data')
 task3_img_dir = os.path.join(data_dir, task3_img)
@@ -29,8 +30,33 @@ if os.path.isdir(task3_img_dir):
                        if fname.startswith('ISIC') and fname.lower().endswith('.jpg')]
 
     task3_image_ids.sort()
+    
+print(task3_image_ids)
 
-print(task3_gt_dir)
+def load_full_data():
+    file_list = []
+    
+    for filename in os.listdir(task3_img_dir):
+        file_list.append(os.path.join(task3_img_dir, filename))
+        
+    image_list = []
+    for file in file_list:
+        temp = Image.open(file)
+        temp = temp.resize((224,224), Image.ANTIALIAS)
+        image_list.append(np.asarray(temp))
+        
+    x = np.array(image_list)
+    return x
+
+def load_task3_training_labels():
+    # image, MEL, NV, BCC, AKIEC, BKL, DF, VASC
+    labels = []
+    with open(os.path.join(task3_gt_dir, task3_gt_fname), 'r') as f:
+        for i, line in tqdm(enumerate(f.readlines()[1:])):
+            fields = line.strip().split(',')
+            labels.append([eval(field) for field in fields[1:]])
+        labels = np.stack(labels, axis=0)
+    return labels
 
 def load_image_by_id(image_id, fname_fn, from_dir, output_size=None, return_size=False):
     img_fnames = fname_fn(image_id)
@@ -116,16 +142,6 @@ def load_task3_training_images(output_size=None):
         images = np.stack(images).astype(np.uint8)
         np.save(images_npy_filename, images)
     return images
-
-def load_task3_training_labels():
-    # image, MEL, NV, BCC, AKIEC, BKL, DF, VASC
-    labels = []
-    with open(os.path.join(task3_gt_dir, task3_gt_fname), 'r') as f:
-        for i, line in tqdm(enumerate(f.readlines()[1:])):
-            fields = line.strip().split(',')
-            labels.append([eval(field) for field in fields[1:]])
-        labels = np.stack(labels, axis=0)
-    return labels
 
 def partition_data(x, y, k=5, i=0, test_split=1. / 6, seed=42):
     assert isinstance(k, int) and isinstance(i, int) and 0 <= i < k
