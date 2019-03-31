@@ -5,7 +5,7 @@ os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID";
 os.environ["CUDA_VISIBLE_DEVICES"]="0";  
 from fine_tune_model import original_resnet152, original_resnet50
 from keras.preprocessing.image import ImageDataGenerator
-from load_data import load_full_data, load_task3_training_labels
+from load_data import load_full_data, load_task3_training_labels, load_training_data
 import numpy as np
 import tensorflow as tf
 from keras import backend as K
