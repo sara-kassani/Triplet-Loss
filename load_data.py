@@ -38,7 +38,8 @@ def load_full_data():
     
     for filename in os.listdir(task3_img_dir):
         file_list.append(os.path.join(task3_img_dir, filename))
-        
+     
+    file_list.sort()
     image_list = []
     for file in file_list:
         temp = Image.open(file)
